@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--
+     由于mybatis的数据库连接和设置都交给spring进行代理了，因此，剩下的就不多了，这里也就剩下一个别名的设置了
+     或许还有一个setting
+     -->
+    <typeAliases>
+        <package name="com.i2f.model"/>
+    </typeAliases>
+
+</configuration>

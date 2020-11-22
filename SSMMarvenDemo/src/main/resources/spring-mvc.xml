@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--解决返回json数据乱码问题-->
+    <bean id="stringHttpMessageConverter"
+          class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <!-- 使用注解方式的时候，需要使用此标签，否则静态资源的访问将会出现问题 -->
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <ref bean="stringHttpMessageConverter" />
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!-- 注册组件扫描器 -->
+    <!-- 这是在配置MVC，因此只扫描Controller即可，也就是去扫描带有@Controller注解的类 -->
+    <context:component-scan base-package="com.i2f.controller"/>
+
+    <!--静态资源-->
+    <!--
+    由于我们在web.xml中配置了mvc中央控制器的url-patten为/,因此静态资源需要给出，否则将会访问出现问题
+    另外一种方式是：
+    <mvc:default-servlet-handler/>
+    但是可控性和性能都没有这种方式好
+     -->
+    <mvc:resources mapping="/html/**" location="/html/" />
+    <!-- 视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
+
+    <!--内部视图解析器-->
+    <!--
+    由于我们把我们的页面都放到了html目录下，因此给定一个前缀和后缀，这样我们在controller中页面跳转的时候，就能省去重复部分
+     -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/html/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>
